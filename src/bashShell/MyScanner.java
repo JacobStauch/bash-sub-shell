@@ -30,6 +30,8 @@ public class MyScanner {
         // If it's a terminal let's set it to the appropriate type
         // "The lexical scanner should identify any terminal that matches a Variable and create a Token for a Variable"
 
+        // If it matches the regular expression for a variable or literal set it to the appropriate type
+
         // If it's EOT then we want to see if that's what comes out in Parser
 
         // Great let's return the next token

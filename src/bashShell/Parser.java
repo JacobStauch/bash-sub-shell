@@ -65,28 +65,64 @@ public class Parser {
 
             case Token.IF: {
                 accept(Token.IF);
+
                 parseFileName();
+
+                // Starter set for argument
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.LIT
                         || currentToken.kind == Token.VAR)
                     parseArgument();
+
                 accept(Token.THEN);
                 accept(Token.EOL);
-                while (currentToken.kind == Token.CMD) {
+
+                // Starter set for command
+                while (currentToken.kind == Token.FName
+                        || currentToken.kind == Token.VAR
+                        || currentToken.kind == Token.IF
+                        || currentToken.kind == Token.FOR) {
                     parseCommand();
                 }
+
                 accept(Token.ELSE);
                 accept(Token.EOL);
-                while (currentToken.kind == Token.CMD) {
+
+                // The original classic thing
+                // More of the same
+                while (currentToken.kind == Token.FName
+                        || currentToken.kind == Token.VAR
+                        || currentToken.kind == Token.IF
+                        || currentToken.kind == Token.FOR) {
                     parseCommand();
                 }
+
                 accept(Token.FI);
                 accept(Token.EOL);
             }
 
             case Token.FOR: {
                 acceptIt();
+                parseVariable();
+                acceptIt(Token.IN);
 
+                while (currentToken.kind == Token.FName
+                        || currentToken.kind == Token.LIT
+                        || currentToken.kind == Token.VAR)
+                    parseArgument();
+
+                acceptIt(Token.EOL);
+                acceptIt(Token.DO);
+
+                while (currentToken.kind == Token.FName
+                        || currentToken.kind == Token.VAR
+                        || currentToken.kind == Token.IF
+                        || currentToken.kind == Token.FOR) {
+                    parseCommand();
+                }
+
+                accept(Token.OD);
+                accept(Token.EOL);
             }
         }
     }
@@ -94,27 +130,27 @@ public class Parser {
     private void parseArgument() {
         switch (currentToken.kind) {
             case Token.FName: {
-
+              parseFileName();
             }
             case Token.LIT: {
-
+              parseLiteral();
             }
             case Token.VAR: {
-
+              parseVariable();
             }
         }
     }
 
     private void parseVariable() {
-
+      acceptIt();
     }
 
     private void parseFileName() {
-
+      acceptIt();
     }
 
     private void parseLiteral() {
-
+      acceptIt();
     }
 
     public void parse() {
