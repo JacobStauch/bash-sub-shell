@@ -31,11 +31,12 @@ public class Parser {
     }
 
     private void writeError(String s) {
-        System.out.print(s);
+        System.out.println(s);
     }
 
     //---------------- Parsing Methods ---------------
     private void parseScript() {
+        currentToken = scanner.scan();
         while (currentToken.kind == Token.FName
                 || currentToken.kind == Token.VAR
                 || currentToken.kind == Token.IF
@@ -104,15 +105,15 @@ public class Parser {
             case Token.FOR: {
                 acceptIt();
                 parseVariable();
-                acceptIt(Token.IN);
+                accept(Token.IN);
 
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.LIT
                         || currentToken.kind == Token.VAR)
                     parseArgument();
 
-                acceptIt(Token.EOL);
-                acceptIt(Token.DO);
+                accept(Token.EOL);
+                accept(Token.DO);
 
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.VAR
