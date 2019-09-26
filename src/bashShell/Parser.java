@@ -160,7 +160,7 @@ public class Parser {
 
     public void parse() {
         parseScript();
-        if(currentToken.equals("eot")) {
+        if (currentToken.kind == Token.EOT) {
             System.out.println("Correctly parsed.");
         }
         else
