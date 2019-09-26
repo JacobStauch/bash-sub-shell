@@ -3,4 +3,5 @@ Example of a parser for a simple bash script recursive decent parser.  Grammar c
 
 Regular Expressions:
 
-Literal: `-(-?)((([a-z]|[0-9])*))|[0-9]*`
+Variable `[a-zA-Z](([a-zA-Z]|[0-9]|\_|\.)*)`
+Literal: `-(-?)((([a-zA-Z]|[0-9])*))|[0-9]*`
