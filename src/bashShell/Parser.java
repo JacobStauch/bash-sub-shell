@@ -15,11 +15,13 @@ public class Parser {
      * @param expectedKind The expected type of token.
      */
     private void accept(byte expectedKind) {
-        if (currentToken.kind == expectedKind)
-            currentToken = scanner.scan();
-        else
-            writeError("Expected:  " + Token.kindString(expectedKind) +
-                    "Found :" + Token.kindString(currentToken.kind));
+        if (currentToken.kind != Token.EOT) {
+            if (currentToken.kind == expectedKind)
+                currentToken = scanner.scan();
+            else
+                writeError("Expected: " + Token.kindString(expectedKind) +
+                        "\nFound: " + Token.kindString(currentToken.kind));
+        }
     }
 
     /**
@@ -27,7 +29,9 @@ public class Parser {
      * to the next token in the input stream.
      */
     private void acceptIt() {
-        currentToken = scanner.scan();
+        if (currentToken.kind != Token.EOT) {
+            currentToken = scanner.scan();
+        }
     }
 
     private void writeError(String s) {
