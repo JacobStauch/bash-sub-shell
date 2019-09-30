@@ -11,6 +11,9 @@ Pasrer.java is the main class for this project. When running it, you will be pro
 Commands must be formed on a single line, inserting "eol" and "eot" where appropriate (eg. "touch myfile.txt eol eot").
 Tokens will be logged to the console as they are tokenized, resulting in a correctly or incorrectly parsed message log.
 
+# One line example
+`touch myfile.txt eol eot`
+
 # If example
 `if test -e apples then eol else eol touch apples eol fi eol mkdir basket eol fruit = apples eol for file in fruit eol do eol mv file basket eol od eol eot`
 
