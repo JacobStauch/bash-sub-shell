@@ -3,6 +3,7 @@ package bashShell;
 public class Parser {
     private Token currentToken = null;
     private MyScanner scanner = new MyScanner();
+    private boolean hadError = false;
 
     //------------- Utility Methods -------------
 
@@ -15,12 +16,15 @@ public class Parser {
      * @param expectedKind The expected type of token.
      */
     private void accept(byte expectedKind) {
-        if (currentToken.kind != Token.EOT) {
-            if (currentToken.kind == expectedKind)
+        if (currentToken.kind == expectedKind) {
+            if (currentToken.kind != Token.EOT) {
                 currentToken = scanner.scan();
-            else
-                writeError("Expected: " + Token.kindString(expectedKind) +
-                        "\nFound: " + Token.kindString(currentToken.kind));
+            }
+        }
+        else {
+            writeError("Expected: " + Token.kindString(expectedKind) +
+                    "\nFound: " + Token.kindString(currentToken.kind));
+            hadError = true;
         }
     }
 
@@ -59,13 +63,18 @@ public class Parser {
                         || currentToken.kind == Token.VAR)
                     parseArgument();
                 accept(Token.EOL);
+                break;
             }
 
             case Token.VAR: {
                 acceptIt();
                 accept(Token.ASSIGN);
-                parseArgument();
+                while (currentToken.kind == Token.FName
+                        || currentToken.kind == Token.LIT
+                        || currentToken.kind == Token.VAR)
+                    parseArgument();
                 accept(Token.EOL);
+                break;
             }
 
             case Token.IF: {
@@ -104,6 +113,7 @@ public class Parser {
 
                 accept(Token.FI);
                 accept(Token.EOL);
+                break;
             }
 
             case Token.FOR: {
@@ -118,6 +128,7 @@ public class Parser {
 
                 accept(Token.EOL);
                 accept(Token.DO);
+                accept(Token.EOL);
 
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.VAR
@@ -128,6 +139,7 @@ public class Parser {
 
                 accept(Token.OD);
                 accept(Token.EOL);
+                break;
             }
         }
     }
@@ -136,12 +148,15 @@ public class Parser {
         switch (currentToken.kind) {
             case Token.FName: {
               parseFileName();
+              break;
             }
             case Token.LIT: {
               parseLiteral();
+              break;
             }
             case Token.VAR: {
               parseVariable();
+              break;
             }
         }
     }
@@ -160,7 +175,7 @@ public class Parser {
 
     public void parse() {
         parseScript();
-        if (currentToken.kind == Token.EOT) {
+        if (currentToken.kind == Token.EOT && !hadError) {
             System.out.println("Correctly parsed.");
         }
         else
