@@ -8,3 +8,6 @@ Literal: `-(-?)((([a-zA-Z]|[0-9])*))|[0-9]*`
 
 # How to run
 Pasrer.java is the main class for this project. When running it, you will be prompted to enter a command. Commands must be formed on a single line, inserting "eol" and "eot" where appropriate (eg. "touch myfile.txt eol eot").
+
+# If example
+`if test -e apples then eol else eol touch apples eol fi eol mkdir basket eol fruit = apples eol for file in fruit eol do eol mv file basket eol od eol eot`
