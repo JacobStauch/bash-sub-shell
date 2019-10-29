@@ -71,37 +71,51 @@ public class Parser {
 
     private Command parseCommand() {
         switch (currentToken.kind) {
+            // Exec-Cmd Case
             case Token.FName: {
-                acceptIt();
+                FNameArg ECFName;
+                Argument ECArg = null;
+
+                ECFName = parseFileName();
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.LIT
                         || currentToken.kind == Token.VAR)
-                    parseArguments();
+                    ECArg = parseArguments();
                 accept(Token.EOL);
-                break;
+                return new ExecCmd(ECFName, ECArg);
             }
 
+            // Assign-Cmd Case
             case Token.VAR: {
-                acceptIt();
+                VarArg ACVarArg;
+                SingleArg ACSingleArg = null;
+
+                ACVarArg = parseVariable();
                 accept(Token.ASSIGN);
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.LIT
                         || currentToken.kind == Token.VAR)
-                    parseArguments();
+                    ACSingleArg = parseSingleArg();
                 accept(Token.EOL);
-                break;
+                return new AssignCmd(ACVarArg, ACSingleArg);
             }
 
+            // If-Cmd Case
             case Token.IF: {
+                FNameArg ICCom;
+                Argument ICArg = null;
+                Command ICThen = null;
+                Command ICElse = null;
+
                 accept(Token.IF);
 
-                parseFileName();
+                ICCom = parseFileName();
 
                 // Starter set for argument
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.LIT
                         || currentToken.kind == Token.VAR)
-                    parseArguments();
+                    ICArg = parseArguments();
 
                 accept(Token.THEN);
                 accept(Token.EOL);
@@ -111,7 +125,7 @@ public class Parser {
                         || currentToken.kind == Token.VAR
                         || currentToken.kind == Token.IF
                         || currentToken.kind == Token.FOR) {
-                    parseCommand();
+                    ICThen = parseCommand();
                 }
 
                 accept(Token.ELSE);
@@ -123,23 +137,28 @@ public class Parser {
                         || currentToken.kind == Token.VAR
                         || currentToken.kind == Token.IF
                         || currentToken.kind == Token.FOR) {
-                    parseCommand();
+                    ICElse = parseCommand();
                 }
 
                 accept(Token.FI);
                 accept(Token.EOL);
-                break;
+                return new IfCmd(ICCom, ICArg, ICThen, ICElse);
             }
 
+            // For-Cmd Case
             case Token.FOR: {
-                acceptIt();
-                parseVariable();
+                VarArg FCVar;
+                Argument FCArg = null;
+                Command FCDo = null;
+
+                accept(Token.FOR);
+                FCVar = parseVariable();
                 accept(Token.IN);
 
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.LIT
                         || currentToken.kind == Token.VAR)
-                    parseArguments();
+                    FCArg = parseArguments();
 
                 accept(Token.EOL);
                 accept(Token.DO);
@@ -149,13 +168,19 @@ public class Parser {
                         || currentToken.kind == Token.VAR
                         || currentToken.kind == Token.IF
                         || currentToken.kind == Token.FOR) {
-                    parseCommand();
+                    FCDo = parseCommand();
                 }
 
                 accept(Token.OD);
                 accept(Token.EOL);
-                break;
+                return new ForCommand(FCVar, FCArg, FCDo);
             }
+
+            // Seq-Cmd Case
+
+            // Default: Empty-Cmd Case
+            default:
+                return new NullCmd();
         }
     }
 
