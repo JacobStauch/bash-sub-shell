@@ -1,9 +1,25 @@
 package bashShell;
 
+import bashShell.ast.*;
+
+/**
+ *
+ */
 public class Parser {
     private Token currentToken = null;
     private MyScanner scanner = new MyScanner();
     private boolean hadError = false;
+    public Script AST;
+
+    //------------- AST Methods -------------
+
+    /**
+     * Prints the AST to the console by recursively visiting the tree
+     * @return AST line by line to the console
+     */
+    private String ASTToString() {
+        return this.AST.visit(0);
+    }
 
     //------------- Utility Methods -------------
 
@@ -43,25 +59,24 @@ public class Parser {
     }
 
     //---------------- Parsing Methods ---------------
-    private void parseScript() {
+    private Script parseScript() {
         currentToken = scanner.scan();
         while (currentToken.kind == Token.FName
                 || currentToken.kind == Token.VAR
                 || currentToken.kind == Token.IF
                 || currentToken.kind == Token.FOR)
-            parseCommand();
+            return new Script(parseCommand());
+        return null;
     }
 
-    private void parseCommand() {
+    private Command parseCommand() {
         switch (currentToken.kind) {
-
             case Token.FName: {
                 acceptIt();
-                //parseFileName();
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.LIT
                         || currentToken.kind == Token.VAR)
-                    parseArgument();
+                    parseArguments();
                 accept(Token.EOL);
                 break;
             }
@@ -72,7 +87,7 @@ public class Parser {
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.LIT
                         || currentToken.kind == Token.VAR)
-                    parseArgument();
+                    parseArguments();
                 accept(Token.EOL);
                 break;
             }
@@ -86,7 +101,7 @@ public class Parser {
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.LIT
                         || currentToken.kind == Token.VAR)
-                    parseArgument();
+                    parseArguments();
 
                 accept(Token.THEN);
                 accept(Token.EOL);
@@ -124,7 +139,7 @@ public class Parser {
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.LIT
                         || currentToken.kind == Token.VAR)
-                    parseArgument();
+                    parseArguments();
 
                 accept(Token.EOL);
                 accept(Token.DO);
@@ -144,37 +159,81 @@ public class Parser {
         }
     }
 
-    private void parseArgument() {
+    private Argument parseArguments() {
+        Argument a1;
+        Argument a2;
+        // First, we process the first argument
         switch (currentToken.kind) {
             case Token.FName: {
-              parseFileName();
+              a1 = parseFileName();
               break;
             }
             case Token.LIT: {
-              parseLiteral();
+              a1 = parseLiteral();
               break;
             }
             case Token.VAR: {
-              parseVariable();
+              a1 = parseVariable();
               break;
             }
+            default:
+                throw new IllegalStateException("Unexpected value: " + currentToken.kind);
         }
+        // Now we see if there's another argument (haven't reached EOL, therefore SeqArg)
+        if (currentToken.kind != Token.EOL) {
+            a2 = parseArguments();
+            return new SeqArg(a1, a2);
+        }
+        // Else just return the single argument we found.
+        return (SingleArg)a1;
     }
 
-    private void parseVariable() {
-      acceptIt();
+    private SingleArg parseSingleArg() {
+        switch (currentToken.kind) {
+            case Token.FName: {
+                return parseFileName();
+            }
+            case Token.LIT: {
+                return parseLiteral();
+            }
+            case Token.VAR: {
+                return parseVariable();
+            }
+        }
+        return null;
     }
 
-    private void parseFileName() {
-      acceptIt();
+    /**
+     * Stores the spelling of the current token (Var,FName,Literal),
+     * accepts it, and returns the appropriate AST node, visiting
+     * it and its terminal
+     * @return Appropriate AST node (Var,FName,Literal)
+     */
+    private VarArg parseVariable() {
+        Terminal t = new Terminal(currentToken.spelling);
+        acceptIt();
+        return new VarArg(t);
     }
 
-    private void parseLiteral() {
-      acceptIt();
+    private FNameArg parseFileName() {
+        Terminal t = new Terminal(currentToken.spelling);
+        acceptIt();
+        return new FNameArg(t);
     }
 
+    private LiteralArg parseLiteral() {
+        Terminal t = new Terminal(currentToken.spelling);
+        acceptIt();
+        return new LiteralArg(t);
+    }
+
+    //------------- Main Methods -------------
+
+    /**
+     * Parses the input script, storing it in the Parser class's AST
+     */
     public void parse() {
-        parseScript();
+        this.AST = parseScript();
         if (currentToken.kind == Token.EOT && !hadError) {
             System.out.println("Correctly parsed.");
         }
@@ -182,6 +241,10 @@ public class Parser {
             writeError("Not a bash command.");
     }
 
+    /**
+     * Creates instance of Parser class and parses the input
+     * @param args
+     */
     public static void main(String [] args) {
         Parser myParser = new Parser();
         myParser.parse();
