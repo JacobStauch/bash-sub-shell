@@ -75,14 +75,17 @@ public class MyScanner {
             default:
                 if (Arrays.asList(this.filenames).contains(potentialToken)) {
                     token.kind = Token.FName;
+                    token.name = potentialToken;
                     return token;
                 }
                 else if (potentialToken.matches(this.variableRegex)) {
                     token.kind = Token.VAR;
+                    token.name = potentialToken;
                     return token;
                 }
                 else if (potentialToken.matches(this.literalRegex)) {
                     token.kind = Token.LIT;
+                    token.name = potentialToken;
                     return token;
                 }
                 else {

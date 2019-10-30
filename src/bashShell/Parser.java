@@ -254,19 +254,19 @@ public class Parser {
      * @return Appropriate AST node (Var,FName,Literal)
      */
     private VarArg parseVariable() {
-        Terminal t = new Terminal(currentToken.spelling);
+        Terminal t = new Terminal(currentToken.name);
         acceptIt();
         return new VarArg(t);
     }
 
     private FNameArg parseFileName() {
-        Terminal t = new Terminal(currentToken.spelling);
+        Terminal t = new Terminal(currentToken.name);
         acceptIt();
         return new FNameArg(t);
     }
 
     private LiteralArg parseLiteral() {
-        Terminal t = new Terminal(currentToken.spelling);
+        Terminal t = new Terminal(currentToken.name);
         acceptIt();
         return new LiteralArg(t);
     }

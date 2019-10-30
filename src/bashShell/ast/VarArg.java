@@ -13,8 +13,8 @@ public class VarArg extends SingleArg {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        "VarArg" + "\n" +
-                        this.variable.visit(indentLevel+1)
+                        "VarArg" + " " +
+                        "(" + this.variable.visit(indentLevel+1) + ")" + "\n"
         );
     }
 }

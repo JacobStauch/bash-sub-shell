@@ -21,8 +21,8 @@ public class FNameArg extends SingleArg  {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        "FNameArg" + "\n" +
-                        this.term.visit(indentLevel+1)
+                        "FNameArg" + " " +
+                        "(" + this.term.visit(indentLevel+1) + ")" + "\n"
         );
     }
 

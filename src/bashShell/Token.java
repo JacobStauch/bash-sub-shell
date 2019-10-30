@@ -2,6 +2,7 @@ package bashShell;
 
 public class Token {
     public byte kind;
+    public String name;
     public String spelling;
 
     public final static byte FName = 0;

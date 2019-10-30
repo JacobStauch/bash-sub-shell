@@ -21,8 +21,8 @@ public class LiteralArg extends SingleArg {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        "LiteralArg" + "\n" +
-                        this.literal.visit(indentLevel+1)
+                        "LiteralArg" + " " +
+                        "(" + this.literal.visit(indentLevel+1) + ")" + "\n"
         );
     }
 }

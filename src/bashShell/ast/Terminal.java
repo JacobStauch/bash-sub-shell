@@ -11,9 +11,6 @@ public class Terminal extends AST {
 
     @Override
     public String visit(int indentLevel) {
-        return(
-                String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        this.spelling + "\n"
-        );
+        return this.spelling;
     }
 }
