@@ -23,9 +23,9 @@ public class AssignCmd extends Command {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                   String.class.getSimpleName() + "\n" +
-                        this.lValue.visit(indentLevel++) +
-                        this.rValue.visit(indentLevel++)
+                   "AssignCmd" + "\n" +
+                        this.lValue.visit(indentLevel+1) +
+                        this.rValue.visit(indentLevel+1)
                 );
     }
 }

@@ -25,10 +25,10 @@ public class ForCommand extends Command {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        String.class.getSimpleName() + "\n" +
-                        this.var.visit(indentLevel++) +
-                        this.args.visit(indentLevel++) +
-                        this.doBody.visit(indentLevel++)
+                        "ForCommand" + "\n" +
+                        this.var.visit(indentLevel+1) +
+                        this.args.visit(indentLevel+1) +
+                        this.doBody.visit(indentLevel+1)
         );
     }
 }

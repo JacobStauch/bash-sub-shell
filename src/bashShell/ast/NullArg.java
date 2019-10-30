@@ -21,7 +21,7 @@ public class NullArg extends Argument {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        String.class.getSimpleName() + "\n"
+                        "NullArg" + "\n"
         );
     }
 }

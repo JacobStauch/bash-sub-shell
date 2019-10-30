@@ -27,11 +27,11 @@ public class IfCmd extends Command {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        String.class.getSimpleName() + "\n" +
-                        this.command.visit(indentLevel++) +
-                        this.args.visit(indentLevel++) +
-                        this.thenBlock.visit(indentLevel++) +
-                        this.elseBlock.visit(indentLevel++)
+                        "IfCmd" + "\n" +
+                        this.command.visit(indentLevel+1) +
+                        this.args.visit(indentLevel+1) +
+                        this.thenBlock.visit(indentLevel+1) +
+                        this.elseBlock.visit(indentLevel+1)
         );
     }
 }

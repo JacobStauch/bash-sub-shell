@@ -23,9 +23,9 @@ public class ExecCmd extends Command {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        String.class.getSimpleName() + "\n" +
-                        this.command.visit(indentLevel++) +
-                        this.args.visit(indentLevel++)
+                        "ExecCmd" + "\n" +
+                        this.command.visit(indentLevel+1) +
+                        this.args.visit(indentLevel+1)
         );
     }
 }

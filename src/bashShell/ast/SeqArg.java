@@ -23,9 +23,9 @@ public class SeqArg extends Argument {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        String.class.getSimpleName() + "\n" +
-                        this.a1.visit(indentLevel++) +
-                        this.a2.visit(indentLevel++)
+                        "SeqArg" + "\n" +
+                        this.a1.visit(indentLevel+1) +
+                        this.a2.visit(indentLevel+1)
         );
     }
 }

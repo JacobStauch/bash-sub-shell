@@ -21,7 +21,7 @@ public class NullCmd extends Command {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        String.class.getSimpleName() + "\n"
+                        "NullCmd" + "\n"
         );
     }
 }

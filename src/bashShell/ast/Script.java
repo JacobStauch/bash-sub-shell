@@ -21,7 +21,7 @@ public class Script extends AST {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        String.class.getSimpleName() + "\n" +
+                        "Script" + "\n" +
                         this.c.visit(indentLevel+1)
         );
     }

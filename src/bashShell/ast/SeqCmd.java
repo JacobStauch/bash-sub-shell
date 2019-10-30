@@ -15,9 +15,9 @@ public class SeqCmd extends Command {
     public String visit(int indentLevel) {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
-                        String.class.getSimpleName() + "\n" +
-                        this.c1.visit(indentLevel++) +
-                        this.c2.visit(indentLevel++)
+                        "SeqCmd" + "\n" +
+                        this.c1.visit(indentLevel+1) +
+                        this.c2.visit(indentLevel+1)
         );
     }
 }
