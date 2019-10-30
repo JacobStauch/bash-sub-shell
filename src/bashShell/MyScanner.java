@@ -1,6 +1,11 @@
 package bashShell;
 
 import javax.print.attribute.SetOfIntegerSyntax;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -8,16 +13,21 @@ import java.util.regex.Matcher;
 
 // Scans code and returns the next token if given token is actually a token
 
-public class MyScanner {
+class MyScanner {
 
-    public Scanner sc;
-    public String[] filenames;
-    public String literalRegex;
-    public String variableRegex;
+    private Scanner sc;
+    private String[] filenames;
+    private String literalRegex;
+    private String variableRegex;
 
-    MyScanner() {
-        System.out.println("Enter a bash command: ");
-        Scanner scan = new Scanner(System.in);
+    MyScanner(String file) throws IOException {
+        String fileContents = new String(Files.readAllBytes(Paths.get(file)));
+        fileContents = fileContents.replaceAll("\\n", " eol ");
+        fileContents = fileContents.replaceAll("\\t", "");
+        fileContents += "eot";
+        fileContents = fileContents.trim().replaceAll(" +", " ");
+
+        Scanner scan = new Scanner(fileContents);
         String command = scan.nextLine();
         this.sc = new Scanner(command);
 
@@ -33,7 +43,6 @@ public class MyScanner {
 
         // Read a thing
         String potentialToken = this.sc.next();
-        System.out.println(potentialToken);
 
         // If it's a terminal let's set it to the appropriate type
         // "The lexical scanner should identify any terminal that matches a Variable and create a Token for a Variable"

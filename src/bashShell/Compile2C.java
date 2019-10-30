@@ -1,6 +1,9 @@
 package bashShell;
 
-public class Compile2C extends Parser {
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+public class Compile2C {
     /**
      * Creates instance of Parser class and parses the input
      * @param args Command line arguments for the program
@@ -9,7 +12,7 @@ public class Compile2C extends Parser {
      *             -p: AST is written to a file
      *             file: Input script
      */
-    public static void main(String [] args) {
+    public static void main(String [] args) throws IOException {
         String file = null;
 
         file = args[1];
@@ -21,7 +24,7 @@ public class Compile2C extends Parser {
             Parser.writeAST(file);
         }
         else {
-            new Parser();
+            Parser.parseOnly(file);
         }
     }
 }

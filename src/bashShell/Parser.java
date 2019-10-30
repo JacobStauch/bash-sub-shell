@@ -4,27 +4,41 @@ import bashShell.ast.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
  *
  */
-public class Parser {
-    private Token currentToken = null;
-    private MyScanner scanner = new MyScanner();
-    private boolean hadError = false;
+class Parser {
+    private Token currentToken;
+    private MyScanner scanner;
+    private boolean hadError;
     private Script myAST;
+    private String myFile;
+
+    Parser(String file) throws IOException {
+        currentToken = null;
+        hadError = false;
+        setMyFile(file);
+        scanner = new MyScanner(file);
+    }
+
 
     /**
      * Parses the input script, storing it in the Parser class's AST
      */
-    public void parse() {
+    private void parse() {
         this.myAST = parseScript();
         if (currentToken.kind == Token.EOT && !hadError) {
             System.out.println("Correctly parsed.");
         }
         else
             writeError("Not a bash command.");
+    }
+
+    private void setMyFile(String file) {
+        myFile = file;
     }
 
     //------------- AST Methods -------------
@@ -38,8 +52,13 @@ public class Parser {
         return outAST;
     }
 
+    /**
+     * Creates a file based on the input script and writes the AST to it
+     * @param AST Filename to store the AST to. .txt is automatically appended
+     * @throws FileNotFoundException
+     */
     private void writeFile(String AST) throws FileNotFoundException {
-        File targetFile = new File(AST);
+        File targetFile = new File(AST + ".txt");
         PrintWriter out = new PrintWriter(targetFile);
         out.println(this.myAST);
     }
@@ -296,27 +315,36 @@ public class Parser {
     //------------- Main Methods -------------
 
     /**
-     * Creates instance of Parser class and parses the input
-     * @param args
+     * Creates instance of Parser class and only parses the input
+     * @param file Filename to parse provided by Compile2C
+     * @throws FileNotFoundException
      */
-    public static void main(String [] args) {
-        Parser myParser = new Parser();
+    static void parseOnly(String file) throws IOException {
+        Parser myParser = new Parser(file);
         myParser.parse();
     }
 
     /**
-     * Creates instance of Parser class and parses the input
+     * Creates instance of Parser class and parses the input,
+     * writing it the console
      * @param file Filename to parse provided by Compile2C
+     * @throws FileNotFoundException
      */
-    static void displayAST(String file) {
-        Parser myParser = new Parser();
+    static void displayAST(String file) throws IOException {
+        Parser myParser = new Parser(file);
         myParser.parse();
         String out = myParser.ASTToString();
         System.out.println(out);
     }
 
-    static void writeAST(String file) throws FileNotFoundException{
-        Parser myParser = new Parser();
+    /**
+     * Creates instance of Parser class and parses the input,
+     * writing it to a file
+     * @param file Filename to parse provided by Compile2C
+     * @throws FileNotFoundException
+     */
+    static void writeAST(String file) throws IOException {
+        Parser myParser = new Parser(file);
         myParser.parse();
         String out = myParser.ASTToString();
         myParser.writeFile(out);
