@@ -2,6 +2,10 @@ package bashShell;
 
 import bashShell.ast.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+
 /**
  *
  */
@@ -11,15 +15,33 @@ public class Parser {
     private boolean hadError = false;
     private Script myAST;
 
+    /**
+     * Parses the input script, storing it in the Parser class's AST
+     */
+    public void parse() {
+        this.myAST = parseScript();
+        if (currentToken.kind == Token.EOT && !hadError) {
+            System.out.println("Correctly parsed.");
+        }
+        else
+            writeError("Not a bash command.");
+    }
+
     //------------- AST Methods -------------
 
     /**
      * Prints the AST to the console by recursively visiting the tree
      * @return AST line by line to the console
      */
-    private void ASTToString() {
+    private String ASTToString() {
         String outAST = this.myAST.visit(0);
-        System.out.println(outAST);
+        return outAST;
+    }
+
+    private void writeFile(String AST) throws FileNotFoundException {
+        File targetFile = new File(AST);
+        PrintWriter out = new PrintWriter(targetFile);
+        out.println(this.myAST);
     }
 
     //------------- Utility Methods -------------
@@ -274,24 +296,29 @@ public class Parser {
     //------------- Main Methods -------------
 
     /**
-     * Parses the input script, storing it in the Parser class's AST
-     */
-    public void parse() {
-        this.myAST = parseScript();
-        if (currentToken.kind == Token.EOT && !hadError) {
-            System.out.println("Correctly parsed.");
-        }
-        else
-            writeError("Not a bash command.");
-    }
-
-    /**
      * Creates instance of Parser class and parses the input
      * @param args
      */
     public static void main(String [] args) {
         Parser myParser = new Parser();
         myParser.parse();
-        myParser.ASTToString();
+    }
+
+    /**
+     * Creates instance of Parser class and parses the input
+     * @param file Filename to parse provided by Compile2C
+     */
+    static void displayAST(String file) {
+        Parser myParser = new Parser();
+        myParser.parse();
+        String out = myParser.ASTToString();
+        System.out.println(out);
+    }
+
+    static void writeAST(String file) throws FileNotFoundException{
+        Parser myParser = new Parser();
+        myParser.parse();
+        String out = myParser.ASTToString();
+        myParser.writeFile(out);
     }
 }
