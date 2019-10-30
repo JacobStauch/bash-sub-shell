@@ -9,7 +9,7 @@ public class Parser {
     private Token currentToken = null;
     private MyScanner scanner = new MyScanner();
     private boolean hadError = false;
-    public Script AST;
+    private Script AST = null;
 
     //------------- AST Methods -------------
 
@@ -17,8 +17,8 @@ public class Parser {
      * Prints the AST to the console by recursively visiting the tree
      * @return AST line by line to the console
      */
-    private String ASTToString() {
-        return this.AST.visit(0);
+    private void ASTToString() {
+        this.AST.visit(0);
     }
 
     //------------- Utility Methods -------------
@@ -69,6 +69,27 @@ public class Parser {
         return null;
     }
 
+    /**
+     *
+     * @param c2
+     * @return A sequential Command if a SeqCmd can be constructed,
+     * otherwise return input Command
+     */
+    private Command parseCommands(Command c2) {
+        if (currentToken.kind != Token.EOL &&
+                currentToken.kind != Token.ELSE &&
+                currentToken.kind != Token.FI &&
+                currentToken.kind != Token.OD) {
+            Command c1;
+            c1 = parseCommand();
+            return new SeqCmd(c1, c2);
+        }
+        else {
+            return c2;
+        }
+
+    }
+
     private Command parseCommand() {
         switch (currentToken.kind) {
             // Exec-Cmd Case
@@ -82,7 +103,9 @@ public class Parser {
                         || currentToken.kind == Token.VAR)
                     ECArg = parseArguments();
                 accept(Token.EOL);
-                return new ExecCmd(ECFName, ECArg);
+                ExecCmd EC = new ExecCmd(ECFName, ECArg);
+                parseCommands(EC);
+                break;
             }
 
             // Assign-Cmd Case
@@ -97,7 +120,9 @@ public class Parser {
                         || currentToken.kind == Token.VAR)
                     ACSingleArg = parseSingleArg();
                 accept(Token.EOL);
-                return new AssignCmd(ACVarArg, ACSingleArg);
+                AssignCmd AC = new AssignCmd(ACVarArg, ACSingleArg);
+                parseCommands(AC);
+                break;
             }
 
             // If-Cmd Case
@@ -131,8 +156,6 @@ public class Parser {
                 accept(Token.ELSE);
                 accept(Token.EOL);
 
-                // The original classic thing
-                // More of the same
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.VAR
                         || currentToken.kind == Token.IF
@@ -142,7 +165,9 @@ public class Parser {
 
                 accept(Token.FI);
                 accept(Token.EOL);
-                return new IfCmd(ICCom, ICArg, ICThen, ICElse);
+                IfCmd IC = new IfCmd(ICCom, ICArg, ICThen, ICElse);
+                parseCommands(IC);
+                break;
             }
 
             // For-Cmd Case
@@ -173,15 +198,16 @@ public class Parser {
 
                 accept(Token.OD);
                 accept(Token.EOL);
-                return new ForCommand(FCVar, FCArg, FCDo);
+                ForCommand FC = new ForCommand(FCVar, FCArg, FCDo);
+                parseCommands(FC);
+                break;
             }
-
-            // Seq-Cmd Case
 
             // Default: Empty-Cmd Case
             default:
                 return new NullCmd();
         }
+        return null;
     }
 
     private Argument parseArguments() {
@@ -273,5 +299,6 @@ public class Parser {
     public static void main(String [] args) {
         Parser myParser = new Parser();
         myParser.parse();
+        myParser.ASTToString();
     }
 }

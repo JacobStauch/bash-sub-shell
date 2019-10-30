@@ -22,7 +22,7 @@ public class Script extends AST {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
                         String.class.getSimpleName() + "\n" +
-                        this.c.visit(indentLevel++)
+                        this.c.visit(indentLevel+1)
         );
     }
 }
