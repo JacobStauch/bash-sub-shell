@@ -54,13 +54,15 @@ class Parser {
 
     /**
      * Creates a file based on the input script and writes the AST to it
-     * @param AST Filename to store the AST to. .txt is automatically appended
+     * @param AST String containing the AST
+     * @param fileName Name of the target file, based on name of script
      * @throws FileNotFoundException
      */
-    private void writeFile(String AST) throws FileNotFoundException {
-        File targetFile = new File(AST + ".txt");
+    private void writeFile(String AST, String fileName) throws FileNotFoundException {
+        File targetFile = new File("AST" + ".txt");
         PrintWriter out = new PrintWriter(targetFile);
-        out.println(this.myAST);
+        out.println(AST);
+        out.close();
     }
 
     //------------- Utility Methods -------------
@@ -347,6 +349,6 @@ class Parser {
         Parser myParser = new Parser(file);
         myParser.parse();
         String out = myParser.ASTToString();
-        myParser.writeFile(out);
+        myParser.writeFile(out, file);
     }
 }
