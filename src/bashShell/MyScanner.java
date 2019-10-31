@@ -48,6 +48,7 @@ class MyScanner {
 
         // Read a thing
         String potentialToken = this.sc.next();
+        System.out.println(potentialToken);
 
         // If it's a terminal let's set it to the appropriate type
         // "The lexical scanner should identify any terminal that matches a Variable and create a Token for a Variable"

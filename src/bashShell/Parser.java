@@ -166,12 +166,12 @@ class Parser {
 
             // If-Cmd Case
             case Token.IF: {
+                accept(Token.IF);
+
                 FNameArg ICCom;
                 Argument ICArg = null;
                 Command ICThen = null;
                 Command ICElse = null;
-
-                accept(Token.IF);
 
                 ICCom = parseFileName();
 
@@ -195,16 +195,21 @@ class Parser {
                 accept(Token.ELSE);
                 accept(Token.EOL);
 
-                while (currentToken.kind == Token.FName
+                if (currentToken.kind == Token.FName
                         || currentToken.kind == Token.VAR
                         || currentToken.kind == Token.IF
                         || currentToken.kind == Token.FOR) {
                     ICElse = parseCommand();
                 }
+                else {
+                    ICElse = new NullCmd();
+                }
 
                 accept(Token.FI);
                 accept(Token.EOL);
+
                 IfCmd IC = new IfCmd(ICCom, ICArg, ICThen, ICElse);
+
                 return parseCommands(IC);
             }
 
@@ -267,7 +272,11 @@ class Parser {
                 throw new IllegalStateException("Unexpected value: " + currentToken.kind);
         }
         // Now we see if there's another argument (haven't reached EOL, therefore SeqArg)
-        if (currentToken.kind != Token.EOL) {
+        if (currentToken.kind != Token.EOL &&
+                currentToken.kind != Token.THEN &&
+                currentToken.kind != Token.FI &&
+                currentToken.kind != Token.OD &&
+                currentToken.kind != Token.ELSE) {
             a2 = parseArguments();
             return new SeqArg(a1, a2);
         }
