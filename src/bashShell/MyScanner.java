@@ -21,7 +21,12 @@ class MyScanner {
     private String variableRegex;
 
     MyScanner(String file) throws IOException {
+        // Read in file as a string
         String fileContents = new String(Files.readAllBytes(Paths.get(file)));
+
+        // Remove all tabs and extraneous spaces
+        // Replace newline with explicit eol
+        // Append eot to end of file
         fileContents = fileContents.replaceAll("\\n", " eol ");
         fileContents = fileContents.replaceAll("\\t", "");
         fileContents += "eot";
