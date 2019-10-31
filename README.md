@@ -7,7 +7,7 @@ Variable `[a-zA-Z](([a-zA-Z]|[0-9]|\_|\.)*)`
 Literal: `-(-?)((([a-zA-Z]|[0-9])*))|[0-9]*`
 
 # How to run
-Pasrer.java is the main class for this project. When running it, you will be prompted to enter a command.
+Parser.java is the main class for this project. When running it, you will be prompted to enter a command.
 Commands must be formed on a single line, inserting "eol" and "eot" where appropriate (eg. "touch myfile.txt eol eot").
 Tokens will be logged to the console as they are tokenized, resulting in a correctly or incorrectly parsed message log.
 
