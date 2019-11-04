@@ -14,8 +14,10 @@ public class FNameArg extends SingleArg  {
 
     /**
      *
-     * @param indentLevel
-     * @return
+     * @param indentLevel Dictates the pretty-printing of the AST.
+     *                    Works by repeating a tab character the number
+     *                    of times provided by indentLevel.
+     * @return 
      */
     @Override
     public String visit(int indentLevel) {

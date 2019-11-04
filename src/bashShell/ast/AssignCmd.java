@@ -16,7 +16,9 @@ public class AssignCmd extends Command {
 
     /**
      *
-     * @param indentLevel
+     * @param indentLevel Dictates the pretty-printing of the AST.
+     *                    Works by repeating a tab character the number
+     *                    of times provided by indentLevel.
      * @return
      */
     @Override
