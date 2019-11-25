@@ -1,0 +1,12 @@
+Script
+	ForCommand
+		VarArg (file)
+		SeqArg
+			VarArg (file1)
+			SeqArg
+				VarArg (file2)
+				VarArg (file3)
+		ExecCmd
+			FNameArg (touch)
+			VarArg (file)
+
