@@ -7,20 +7,16 @@ Variable `[a-zA-Z](([a-zA-Z]|[0-9]|\_|\.)*)`
 Literal: `-(-?)((([a-zA-Z]|[0-9])*))|[0-9]*`
 
 # How to run
-Parser.java is the main class for this project. When running it, you will be prompted to enter a command.
-Commands must be formed on a single line, inserting "eol" and "eot" where appropriate (eg. "touch myfile.txt eol eot").
-Tokens will be logged to the console as they are tokenized, resulting in a correctly or incorrectly parsed message log.
+The "compile2C" script is the primary way of running this program.
 
-# Examples
+Note that this script simply points to a Compile2C jar. The version included in the repo may or may not be up to date with the source.
 
-## One line example
-`touch myfile.txt eol eot`
+The CLI arguments are as follows:
 
-## If example
-`if test -e apples then eol else eol touch apples eol fi eol mkdir basket eol fruit = apples eol for file in fruit eol do eol mv file basket eol od eol eot`
+```bash
+compile2C (-d | -p) file
+-d                    Produced AST is printed to the console.
+-p                    Produced AST is written to a file.
+file:                 The input script to parse.
 
-## For example
-`for apples in fruit eol do eol mv apples basket eol od eol eot`
-
-## If Else example
-`if test -e cal.txt then eol cat cal.txt eol else eol ls -l eol fi eol eot`
+Example scripts can be found in the scripts directory.
