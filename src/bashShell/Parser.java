@@ -293,7 +293,7 @@ class Parser {
                 currentToken.kind != Token.FI &&
                 currentToken.kind != Token.OD &&
                 currentToken.kind != Token.ELSE) {
-            a2 = parseArguments();
+            a2 = parseIfArguments();
             return new SeqArg(a1, a2);
         }
         // Else just return the single argument we found.
