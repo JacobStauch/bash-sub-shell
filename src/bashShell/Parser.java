@@ -173,13 +173,22 @@ class Parser {
                 Command ICThen = null;
                 Command ICElse = null;
 
+                /* if Filename Argument* then eol
+                / Token's name must be test or ps
+                / otherwise it can't resolve to
+                / a boolean, set hadError to true
+                */
+
+                if (!currentToken.name.equals("ps") && !currentToken.name.equals("test"))
+                    hadError = true;
+
                 ICCom = parseFileName();
 
                 // Starter set for argument
                 while (currentToken.kind == Token.FName
                         || currentToken.kind == Token.LIT
                         || currentToken.kind == Token.VAR)
-                    ICArg = parseArguments();
+                    ICArg = parseIfArguments();
 
                 accept(Token.THEN);
                 accept(Token.EOL);
@@ -249,6 +258,46 @@ class Parser {
             default:
                 return new NullCmd();
         }
+    }
+
+    private Argument parseIfArguments() {
+        Argument a1;
+        Argument a2;
+        // First, we process the first argument
+        switch (currentToken.kind) {
+            case Token.FName: {
+                if (currentToken.name.equals("ps") || currentToken.name.equals("test")) {
+                    a1 = parseFileName();
+                    break;
+                }
+                else {
+                    hadError = true;
+                    a1 = parseFileName();
+                    break;
+                }
+            }
+            case Token.LIT: {
+                a1 = parseLiteral();
+                break;
+            }
+            case Token.VAR: {
+                a1 = parseVariable();
+                break;
+            }
+            default:
+                throw new IllegalStateException("Unexpected value: " + currentToken.kind);
+        }
+        // Now we see if there's another argument (haven't reached EOL, therefore SeqArg)
+        if (currentToken.kind != Token.EOL &&
+                currentToken.kind != Token.THEN &&
+                currentToken.kind != Token.FI &&
+                currentToken.kind != Token.OD &&
+                currentToken.kind != Token.ELSE) {
+            a2 = parseArguments();
+            return new SeqArg(a1, a2);
+        }
+        // Else just return the single argument we found.
+        return (SingleArg)a1;
     }
 
     private Argument parseArguments() {
