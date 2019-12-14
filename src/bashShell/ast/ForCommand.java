@@ -1,5 +1,7 @@
 package bashShell.ast;
 
+import bashShell.Checker;
+
 import java.util.Collections;
 
 /**
@@ -14,6 +16,18 @@ public class ForCommand extends Command {
         this.var = var;
         this.args = args;
         this.doBody = doBody;
+    }
+
+    public VarArg getVar() {
+        return this.var;
+    }
+
+    public Argument getArgs() {
+        return this.args;
+    }
+
+    public Command getDoBody() {
+        return this.doBody;
     }
 
     /**
@@ -32,5 +46,10 @@ public class ForCommand extends Command {
                         this.args.visit(indentLevel+1) +
                         this.doBody.visit(indentLevel+1)
         );
+    }
+
+    @Override
+    public Object accept(Checker c, Object o) {
+        return c.visitForCommand(this, o);
     }
 }

@@ -1,5 +1,7 @@
 package bashShell.ast;
 
+import bashShell.Checker;
+
 import java.util.Collections;
 
 /**
@@ -10,6 +12,10 @@ public class NullArg extends Argument {
 
     public NullArg() {
         this.arg = null;
+    }
+
+    public Argument getArg() {
+        return null;
     }
 
     /**
@@ -25,5 +31,10 @@ public class NullArg extends Argument {
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
                         "NullArg" + "\n"
         );
+    }
+
+    @Override
+    public Object accept(Checker c, Object o) {
+        return c.visitNullArg(this, o);
     }
 }

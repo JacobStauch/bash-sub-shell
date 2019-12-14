@@ -1,15 +1,21 @@
 package bashShell.ast;
 
+import bashShell.Checker;
+
 import java.util.Collections;
 
 /**
  *
  */
 public class Script extends AST {
-    public Command c;
+    private Command command;
 
     public Script(Command c) {
-        this.c = c;
+        this.command = c;
+    }
+
+    public Command getCommand() {
+        return this.command;
     }
 
     /**
@@ -24,7 +30,12 @@ public class Script extends AST {
         return(
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
                         "Script" + "\n" +
-                        this.c.visit(indentLevel+1)
+                        this.command.visit(indentLevel+1)
         );
+    }
+
+    @Override
+    public Object accept(Checker c, Object o) {
+        return c.visitScript(this, o);
     }
 }

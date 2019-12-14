@@ -1,5 +1,7 @@
 package bashShell.ast;
 
+import bashShell.*;
+
 /**
  *
  */
@@ -12,4 +14,6 @@ public abstract class AST {
      * @return The string representing the AST.
      */
     public abstract String visit(int indentLevel);
+
+    public abstract Object accept(Checker c, Object o);
 }

@@ -1,8 +1,7 @@
 package bashShell.ast;
 
-/**
- *
- */
+import bashShell.Checker;
+
 public class Argument extends AST {
     /**
      *
@@ -11,6 +10,11 @@ public class Argument extends AST {
      */
     @Override
     public String visit(int indentLevel) {
+        return null;
+    }
+
+    @Override
+    public Object accept(Checker c, Object o) {
         return null;
     }
 }

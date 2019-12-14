@@ -1,5 +1,7 @@
 package bashShell.ast;
 
+import bashShell.Checker;
+
 import java.util.Collections;
 
 /**
@@ -16,6 +18,22 @@ public class IfCmd extends Command {
         this.args = args;
         this.thenBlock = thenBlock;
         this.elseBlock = elseBlock;
+    }
+
+    public FNameArg getCommand() {
+        return this.command;
+    }
+
+    public Argument getArgs() {
+        return this.args;
+    }
+
+    public Command getThenBlock() {
+        return this.thenBlock;
+    }
+
+    public Command getElseBlock() {
+        return this.elseBlock;
     }
 
     /**
@@ -35,5 +53,10 @@ public class IfCmd extends Command {
                         this.thenBlock.visit(indentLevel+1) +
                         this.elseBlock.visit(indentLevel+1)
         );
+    }
+
+    @Override
+    public Object accept(Checker c, Object o) {
+        return c.visitIfCmd(this, o);
     }
 }

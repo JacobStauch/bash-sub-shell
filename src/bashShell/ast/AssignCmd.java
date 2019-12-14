@@ -1,5 +1,7 @@
 package bashShell.ast;
 
+import bashShell.Checker;
+
 import java.util.Collections;
 
 /**
@@ -12,6 +14,14 @@ public class AssignCmd extends Command {
     public AssignCmd(VarArg lValue, SingleArg rValue) {
         this.lValue = lValue;
         this.rValue = rValue;
+    }
+
+    public VarArg getlValue() {
+        return this.lValue;
+    }
+
+    public SingleArg getrValue() {
+        return this.rValue;
     }
 
     /**
@@ -29,5 +39,10 @@ public class AssignCmd extends Command {
                         this.lValue.visit(indentLevel+1) +
                         this.rValue.visit(indentLevel+1)
                 );
+    }
+
+    @Override
+    public Object accept(Checker c, Object o) {
+        return(c.visitAssignCmd(this, o));
     }
 }

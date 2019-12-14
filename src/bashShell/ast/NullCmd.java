@@ -1,5 +1,7 @@
 package bashShell.ast;
 
+import bashShell.Checker;
+
 import java.util.Collections;
 
 /**
@@ -25,5 +27,10 @@ public class NullCmd extends Command {
                 String.join("", Collections.nCopies(indentLevel, "\t")) +
                         "NullCmd" + "\n"
         );
+    }
+
+    @Override
+    public Object accept(Checker c, Object o) {
+        return c.visitNullCmd(this, o);
     }
 }

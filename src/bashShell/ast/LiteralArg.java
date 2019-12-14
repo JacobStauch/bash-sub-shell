@@ -1,5 +1,7 @@
 package bashShell.ast;
 
+import bashShell.Checker;
+
 import java.util.Collections;
 
 /**
@@ -10,6 +12,10 @@ public class LiteralArg extends SingleArg {
 
     public LiteralArg(Terminal literal) {
         this.literal = literal;
+    }
+
+    public Terminal getLiteral() {
+        return this.literal;
     }
 
     /**
@@ -26,5 +32,10 @@ public class LiteralArg extends SingleArg {
                         "LiteralArg" + " " +
                         "(" + this.literal.visit(indentLevel+1) + ")" + "\n"
         );
+    }
+
+    @Override
+    public Object accept(Checker c, Object o) {
+        return c.visitLiteralArg(this, o);
     }
 }

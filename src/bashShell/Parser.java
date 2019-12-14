@@ -37,6 +37,11 @@ class Parser {
             writeError("Not a bash command.");
     }
 
+    private void check() {
+        Checker c = new Checker();
+        c.visitScript(this.myAST, null);
+    }
+
     private void setMyFile(String file) {
         myFile = file;
     }
@@ -393,6 +398,7 @@ class Parser {
     static void displayAST(String file) throws IOException {
         Parser myParser = new Parser(file);
         myParser.parse();
+        myParser.check();
         String out = myParser.ASTToString();
         System.out.println(out);
     }
@@ -406,6 +412,7 @@ class Parser {
     static void writeAST(String file) throws IOException {
         Parser myParser = new Parser(file);
         myParser.parse();
+        myParser.check();
         String out = myParser.ASTToString();
         myParser.writeFile(out, file);
     }

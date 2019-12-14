@@ -1,5 +1,7 @@
 package bashShell.ast;
 
+import bashShell.Checker;
+
 import java.util.Collections;
 
 /**
@@ -10,6 +12,10 @@ public class FNameArg extends SingleArg  {
 
     public FNameArg(Terminal term) {
         this.term = term;
+    }
+
+    public Terminal getTerm() {
+        return this.term;
     }
 
     /**
@@ -26,6 +32,11 @@ public class FNameArg extends SingleArg  {
                         "FNameArg" + " " +
                         "(" + this.term.visit(indentLevel+1) + ")" + "\n"
         );
+    }
+
+    @Override
+    public Object accept(Checker c, Object o) {
+        return c.visitFNameArg(this, o);
     }
 
 }
